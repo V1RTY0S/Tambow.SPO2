@@ -1,0 +1,172 @@
+/* --- Базовые настройки --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Стили для тела страницы --- */
+body {
+  margin: 20px;
+  background-color: #f4f7f6; /* Светлый фон */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* --- Навигация --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff; /* Белый фон для меню */
+  padding: 15px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+}
+
+.logo a {
+  color: #2c3e50; /* Темно-синий цвет */
+  font-size: 24px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-left: 25px;
+}
+
+.nav-links a {
+  color: #7f8c8d; /* Серый цвет ссылок */
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #3498db; /* Синий при наведении */
+}
+
+/* --- Главный заголовок --- */
+.main-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.main-header h3 {
+  font-size: 36px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+.main-header p {
+  font-size: 18px;
+  color: #555;
+}
+
+/*Основная часть*/
+.main-content {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  margin-left: 50px;
+  margin-right: 50px;
+  line-height: 30px;
+}
+
+.container-body {
+  display: grid;
+  gap: 10px;
+}
+
+.card-body {
+  display: flex; /* Включаем Flexbox */
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  border-radius: 15px;
+  padding: 25px;
+  background-color: #f4fdff;
+}
+
+.card-body h2 {
+  text-align: center;
+}
+
+.card-body h3 {
+  text-align: center;
+}
+
+.card-body p {
+  text-align: center;
+  text-indent: 25px;
+  flex-grow: 1;
+}
+
+.card-body2 p {
+  text-align: center;
+  text-indent: 25px;
+  flex-grow: 1;
+}
+
+.card-body ul {
+  margin-left: 25px;
+  flex-grow: 1;
+}
+
+/* --- Базовые настройки для подвала --- */
+.site-footer {
+  background-color: #33485d; /* Темный фон */
+  color: #ecf0f1; /* Светлый текст */
+  padding: 80px 0px; /* Отступы сверху и снизу */
+  margin-top: auto; /* "Прижимает" футер к низу, если контента мало */
+  border-radius: 15px;
+  margin-bottom: -20px !important;
+  margin-top: 20px !important;
+  margin-left: -20px !important;
+  margin-right: -20px !important;
+}
+
+.footer-container {
+  max-width: 1100px; /* Ограничиваем ширину контента */
+  margin: 0 auto; /* Центрируем контейнер */
+  display: flex; /* Включаем Flexbox */
+  justify-content: space-between; /* Распределяем блоки */
+  flex-wrap: wrap; /* Позволяем блокам переноситься на новую строку на моб. устройствах */
+  gap: 30px; /* Отступы между блоками */
+  text-align: center;
+}
+
+/* Стили для секций внутри футера */
+.footer-section {
+  flex: 1; /* Занимаем равное пространство */
+  min-width: 200px; /* Минимальная ширина, чтобы текст не сжимался слишком сильно */
+}
+.footer-section h4 {
+  color: #3498db; /* Акцентный цвет для заголовков */
+  margin-bottom: 15px;
+}
+.footer-section ul {
+  list-style: none;
+}
+.footer-section li {
+  margin-bottom: 10px;
+}
+.footer-section a {
+  color: inherit; /* Наследуем цвет текста родителя (светлый) */
+  text-decoration: none;
+}
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+/* Нижняя часть с копирайтом */
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  border-top: 1px solid #33485d;
+  padding-top: 20px;
+}
