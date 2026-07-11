@@ -1,0 +1,181 @@
+/* --- Базовые настройки --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Современный шрифт */
+}
+
+/* --- Стили для тела страницы --- */
+body {
+  margin: 20px;
+  background-color: #f4f7f6; /* Светлый фон */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* --- Навигация --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff; /* Белый фон для меню */
+  padding: 15px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+}
+
+.logo a {
+  color: #2c3e50; /* Темно-синий цвет */
+  font-size: 24px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-left: 25px;
+}
+
+.nav-links a {
+  color: #7f8c8d;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #3498db;
+}
+
+/* --- Главный заголовок --- */
+.main-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.main-header h1 {
+  font-size: 36px;
+  color: #2c3e50;
+}
+.main-header p {
+  font-size: 18px;
+  color: #555;
+}
+
+/* --- Контейнер для карточек (сетка) --- */
+.container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(400px, 1fr)
+  ); /* Адаптивные колонки */
+  gap: 25px;
+}
+
+/* --- Стили для карточек --- */
+.card {
+  display: flex; /* Включаем Flexbox */
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 350px;
+  background-color: #ffffff;
+  text-align: center;
+  border-radius: 15px;
+  padding: 25px;
+  transition: transform 0.2s ease;
+}
+
+.card h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #666;
+  flex-grow: 1; /*заставляет текст занимать все свободное место */
+}
+
+.card a {
+  text-decoration: none;
+}
+
+/* Кнопка "Подробнее" */
+.btn-details {
+  display: inline-block;
+  background-color: #3498db;
+  color: white !important; /* Важно, чтобы перекрыть стили ссылки */
+  text-decoration: none !important;
+  padding: 12px 25px;
+  max-width: 200px;
+  margin: 0 auto; /* Убирает внешние отступы сверху/снизу и центрирует по горизонтали */
+  border-radius: 25px;
+  font-weight: bold;
+}
+
+/* --- Эффекты при наведении --- */
+.card:hover {
+  transform: translateY(-10px); /* Поднимаем карточку */
+}
+
+.btn-details:hover {
+  background-color: #2980b9;
+}
+
+/* --- Базовые настройки для подвала --- */
+.site-footer {
+  background-color: #33485d;
+  color: #ffffff;
+  padding: 80px 10px;
+  margin-top: auto;
+  border-radius: 15px;
+  margin-bottom: -20px !important;
+  margin-top: 20px !important;
+  margin-left: -20px !important;
+  margin-right: -20px !important;
+}
+
+.footer-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  text-align: center;
+}
+
+/* Стили для секций внутри футера */
+.footer-section {
+  flex: 1; /* Занимаем равное пространство */
+  min-width: 410px;
+}
+.footer-section h4 {
+  color: #3498db;
+  margin-bottom: 15px;
+}
+.footer-section ul {
+  list-style: none;
+}
+.footer-section li {
+  margin-bottom: 10px;
+}
+.footer-section a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+/* Нижняя часть с копирайтом */
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  border-top: 1px solid #33485d;
+  padding-top: 20px;
+}
