@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Вход · Supabase Auth</title>
+<title>Новый пароль · Supabase Auth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -21,9 +21,7 @@
     --error-dim: rgba(255,107,107,0.1);
     --radius: 14px;
   }
-
   *{ box-sizing: border-box; }
-
   body{
     margin: 0;
     min-height: 100vh;
@@ -38,40 +36,7 @@
     color: var(--text);
     padding: 24px;
   }
-
-  .wrap{
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .status{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-    margin-bottom: 18px;
-    padding-left: 2px;
-  }
-
-  .dot{
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 0 rgba(94,234,212,0.6);
-    animation: pulse 2s infinite;
-  }
-  .dot.error{ background: var(--error); animation: none; }
-
-  @keyframes pulse{
-    0%   { box-shadow: 0 0 0 0 rgba(94,234,212,0.5); }
-    70%  { box-shadow: 0 0 0 6px rgba(94,234,212,0); }
-    100% { box-shadow: 0 0 0 0 rgba(94,234,212,0); }
-  }
-
+  .wrap{ width: 100%; max-width: 400px; }
   .card{
     background: var(--card);
     border: 1px solid var(--card-border);
@@ -79,7 +44,6 @@
     padding: 32px 28px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.35);
   }
-
   h1{
     font-family: 'Space Grotesk', sans-serif;
     font-size: 24px;
@@ -87,26 +51,10 @@
     margin: 0 0 6px;
     letter-spacing: -0.01em;
   }
-
-  .subtitle{
-    color: var(--muted);
-    font-size: 13.5px;
-    margin: 0 0 26px;
-    line-height: 1.5;
-  }
-
+  .subtitle{ color: var(--muted); font-size: 13.5px; margin: 0 0 26px; line-height: 1.5; }
   form{ display: flex; flex-direction: column; gap: 14px; }
-
-  label{
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--muted);
-    margin-bottom: 6px;
-    display: block;
-  }
-
+  label{ font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 6px; display: block; }
   .field{ display: flex; flex-direction: column; }
-
   input{
     background: #0e1015;
     border: 1px solid var(--card-border);
@@ -119,33 +67,10 @@
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   input::placeholder{ color: #4b5265; }
-  input:focus{
+  input:focus, input:focus-visible{
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-dim);
   }
-  input:focus-visible{
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-dim);
-  }
-
-  .row-between{
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -6px;
-  }
-
-  .link-btn{
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 12.5px;
-    cursor: pointer;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    transition: color 0.15s ease;
-  }
-  .link-btn:hover{ color: var(--accent); }
-
   button[type="submit"]{
     margin-top: 8px;
     background: var(--accent);
@@ -166,14 +91,9 @@
   button[type="submit"]:hover{ filter: brightness(1.08); }
   button[type="submit"]:active{ transform: scale(0.99); }
   button[type="submit"]:disabled{ opacity: 0.6; cursor: not-allowed; }
-  button[type="submit"]:focus-visible{
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
+  button[type="submit"]:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
   .spinner{
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
     border: 2px solid rgba(14,16,21,0.3);
     border-top-color: #0e1015;
     border-radius: 50%;
@@ -182,26 +102,6 @@
   }
   .spinner.show{ display: inline-block; }
   @keyframes spin{ to{ transform: rotate(360deg); } }
-
-  .switch{
-    text-align: center;
-    margin-top: 22px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .switch button{
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    padding: 0;
-    margin-left: 4px;
-  }
-  .switch button:hover{ text-decoration: underline; }
-
   .message{
     font-size: 13px;
     padding: 10px 12px;
@@ -213,208 +113,95 @@
   .message.show{ display: block; }
   .message.error{ background: var(--error-dim); color: var(--error); border: 1px solid rgba(255,107,107,0.25); }
   .message.success{ background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(94,234,212,0.25); }
-
-  @media (prefers-reduced-motion: reduce){
-    .dot{ animation: none; }
-    .spinner{ animation: spin 1.2s linear infinite; }
-  }
+  @media (prefers-reduced-motion: reduce){ .spinner{ animation: spin 1.2s linear infinite; } }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <div class="status">
-    <span class="dot" id="statusDot"></span>
-    <span id="statusText">SUPABASE · ПОДКЛЮЧЕНИЕ…</span>
-  </div>
-
   <div class="card">
-    <h1 id="formTitle">Вход в аккаунт</h1>
-    <p class="subtitle" id="formSubtitle">Введите почту и пароль, чтобы продолжить</p>
+    <h1>Новый пароль</h1>
+    <p class="subtitle" id="subtitle">Придумайте новый пароль для входа</p>
 
     <div class="message" id="msgBox"></div>
 
-    <form id="authForm">
+    <form id="resetForm">
       <div class="field">
-        <label for="email">Электронная почта</label>
-        <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+        <label for="password">Новый пароль</label>
+        <input type="password" id="password" placeholder="••••••••" required minlength="6" autocomplete="new-password">
       </div>
-
       <div class="field">
-        <label for="password">Пароль</label>
-        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" minlength="6">
-      </div>
-
-      <div class="row-between" id="forgotRow">
-        <button type="button" class="link-btn" id="forgotBtn">Забыли пароль?</button>
+        <label for="password2">Повторите пароль</label>
+        <input type="password" id="password2" placeholder="••••••••" required minlength="6" autocomplete="new-password">
       </div>
 
       <button type="submit" id="submitBtn">
         <span class="spinner" id="spinner"></span>
-        <span id="submitLabel">Войти</span>
+        <span id="submitLabel">Сохранить пароль</span>
       </button>
     </form>
-
-    <div class="switch">
-      <span id="switchText">Нет аккаунта?</span>
-      <button type="button" id="switchBtn">Зарегистрироваться</button>
-    </div>
   </div>
 </div>
 
 <script>
   // ==== НАСТРОЙКИ SUPABASE ====
-  // Замените на свои значения из Project Settings → API
   const SUPABASE_URL = 'https://crirmkysumirbdsjdwdz.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_s0iVxglyGlPFd-4Ni2mpjw_n6iD3OZb';
+  const SUPABASE_ANON_KEY = 'https://crirmkysumirbdsjdwdz.supabase.co';
 
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ==== СОСТОЯНИЕ ФОРМЫ ====
-  let mode = 'signin'; // 'signin' | 'signup'
-
-  const form = document.getElementById('authForm');
-  const emailInput = document.getElementById('email');
+  const form = document.getElementById('resetForm');
   const passwordInput = document.getElementById('password');
+  const password2Input = document.getElementById('password2');
   const submitBtn = document.getElementById('submitBtn');
-  const submitLabel = document.getElementById('submitLabel');
   const spinner = document.getElementById('spinner');
   const msgBox = document.getElementById('msgBox');
-  const formTitle = document.getElementById('formTitle');
-  const formSubtitle = document.getElementById('formSubtitle');
-  const switchText = document.getElementById('switchText');
-  const switchBtn = document.getElementById('switchBtn');
-  const forgotRow = document.getElementById('forgotRow');
-  const forgotBtn = document.getElementById('forgotBtn');
-  const statusDot = document.getElementById('statusDot');
-  const statusText = document.getElementById('statusText');
+  const subtitle = document.getElementById('subtitle');
 
   function showMessage(text, type){
     msgBox.textContent = text;
     msgBox.className = 'message show ' + type;
   }
-  function hideMessage(){
-    msgBox.className = 'message';
-  }
-
   function setLoading(isLoading){
     submitBtn.disabled = isLoading;
     spinner.classList.toggle('show', isLoading);
   }
 
-  function updateModeUI(){
-    if(mode === 'signin'){
-      formTitle.textContent = 'Вход в аккаунт';
-      formSubtitle.textContent = 'Введите почту и пароль, чтобы продолжить';
-      submitLabel.textContent = 'Войти';
-      switchText.textContent = 'Нет аккаунта?';
-      switchBtn.textContent = 'Зарегистрироваться';
-      forgotRow.style.display = 'flex';
-    } else {
-      formTitle.textContent = 'Создать аккаунт';
-      formSubtitle.textContent = 'Укажите почту и придумайте пароль';
-      submitLabel.textContent = 'Зарегистрироваться';
-      switchText.textContent = 'Уже есть аккаунт?';
-      switchBtn.textContent = 'Войти';
-      forgotRow.style.display = 'none';
-    }
-    hideMessage();
-  }
-
-  switchBtn.addEventListener('click', () => {
-    mode = mode === 'signin' ? 'signup' : 'signin';
-    updateModeUI();
-  });
-
-  forgotBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if(!email){
-      showMessage('Сначала введите адрес электронной почты.', 'error');
-      return;
-    }
-    hideMessage();
-    setLoading(true);
-    try{
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset-password.html'
-      });
-      if(error) throw error;
-      showMessage('Письмо для сброса пароля отправлено на ' + email, 'success');
-    } catch(err){
-      showMessage(translateError(err.message), 'error');
-    } finally {
-      setLoading(false);
+  // Supabase сам обрабатывает токен восстановления из ссылки в письме
+  // и создаёт временную сессию с событием PASSWORD_RECOVERY.
+  supabaseClient.auth.onAuthStateChange((event) => {
+    if(event === 'PASSWORD_RECOVERY'){
+      subtitle.textContent = 'Ссылка подтверждена. Введите новый пароль.';
     }
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    hideMessage();
 
-    const email = emailInput.value.trim();
     const password = passwordInput.value;
+    const password2 = password2Input.value;
 
-    if(!email || !password){
-      showMessage('Заполните оба поля.', 'error');
+    if(password !== password2){
+      showMessage('Пароли не совпадают.', 'error');
+      return;
+    }
+    if(password.length < 6){
+      showMessage('Пароль должен содержать минимум 6 символов.', 'error');
       return;
     }
 
     setLoading(true);
     try{
-      if(mode === 'signin'){
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if(error) throw error;
-        showMessage('Вход выполнен успешно. Перенаправление…', 'success');
-        // Пример редиректа после входа:
-        // window.location.href = '/dashboard.html';
-      } else {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password });
-        if(error) throw error;
-        if(data.user && data.user.identities && data.user.identities.length === 0){
-          showMessage('Этот email уже зарегистрирован. Попробуйте войти.', 'error');
-        } else {
-          showMessage('Регистрация прошла успешно. Проверьте почту для подтверждения.', 'success');
-        }
-      }
+      const { error } = await supabaseClient.auth.updateUser({ password });
+      if(error) throw error;
+      showMessage('Пароль изменён. Перенаправление…', 'success');
+      setTimeout(() => {
+        window.location.href = 'main.html';
+      }, 800);
     } catch(err){
-      showMessage(translateError(err.message), 'error');
+      showMessage(err.message || 'Не удалось изменить пароль. Попробуйте ещё раз.', 'error');
     } finally {
       setLoading(false);
-    }
-  });
-
-  function translateError(message){
-    const map = {
-      'Invalid login credentials': 'Неверная почта или пароль.',
-      'Email not confirmed': 'Email не подтверждён. Проверьте почту.',
-      'User already registered': 'Пользователь с таким email уже существует.',
-      'Password should be at least 6 characters': 'Пароль должен содержать минимум 6 символов.'
-    };
-    return map[message] || message || 'Произошла ошибка. Попробуйте снова.';
-  }
-
-  // ==== ПРОВЕРКА ПОДКЛЮЧЕНИЯ / ТЕКУЩЕЙ СЕССИИ ====
-  (async () => {
-    try{
-      const { data, error } = await supabaseClient.auth.getSession();
-      if(error) throw error;
-      statusDot.classList.remove('error');
-      statusText.textContent = data.session
-        ? 'SUPABASE · СЕССИЯ АКТИВНА'
-        : 'SUPABASE · ПОДКЛЮЧЕНО';
-    } catch(err){
-      statusDot.classList.add('error');
-      statusText.textContent = 'SUPABASE · ОШИБКА ПОДКЛЮЧЕНИЯ';
-    }
-  })();
-
-  // Слушаем изменения состояния авторизации
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-    if(event === 'SIGNED_IN'){
-      statusText.textContent = 'SUPABASE · СЕССИЯ АКТИВНА';
-    }
-    if(event === 'SIGNED_OUT'){
-      statusText.textContent = 'SUPABASE · ПОДКЛЮЧЕНО';
     }
   });
 </script>
