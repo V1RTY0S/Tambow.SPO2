@@ -16,22 +16,22 @@
         }
 
         .container {
-            width: 360px; max-width: 90%; padding: 40px;
+            width: 320px; max-width: 95vw; padding: 40px;
             border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 20px;
-            text-align: center; position: relative; overflow: hidden;
+            text-align: center; position: relative;
         }
 
         h2 { color: #333; margin-bottom: 5px; }
         p.subtitle { color: #666; font-size: 14px; margin-top: 0; margin-bottom: 25px; }
 
-        input {
+        input { 
             width: 100%;
             padding: 12px; margin-bottom: 15px;
             border: 1px solid #e1e1e1; border-radius: 8px;
             box-sizing: border-box; font-size: 16px;
         }
 
-        button {
+        button { 
             width: 100%; padding: 12px;
             background: #4CAF50; color: white; border: none; border-radius: 8px;
             cursor: pointer; font-weight: bold; transition: opacity 0.2s;
@@ -39,7 +39,7 @@
         button:hover { opacity: 0.9; }
 
         /* === СООБЩЕНИЯ О СТАТУСЕ === */
-        .status {
+        .status { 
             margin-top: 15px; padding: 10px; border-radius: 5px;
             font-size: 14px; display: none;
         }
@@ -54,31 +54,16 @@
         }
         .links a { color: #3b82f6; text-decoration: none; cursor: pointer; }
 
-        /* === АНИМАЦИЯ ПЕРЕКЛЮЧЕНИЯ === */
-        .form-container {
-            position: relative; z-index: 1;
-            transform-style: preserve-3d; perspective: 1000px;
-            transition: transform 0.5s ease-in-out;
-        }
-
+        /* === АНИМАЦИЯ ПОКАЗА ФОРМЫ === */
         .form-group {
-            position: absolute; top: 0; left: 0; right: 0;
-            backface-visibility: hidden;
-            animation-duration: 0.5s; animation-fill-mode: forwards;
+            animation-duration: 0.3s; animation-fill-mode: forwards;
+            visibility: hidden; opacity: 0;
         }
 
-        /* Форма Регистрации — это "задняя сторона". Она повернута на 180 градусов вокруг оси Y */
-        .register-form {
-            transform: rotateY(-180deg);
-        }
-
-        /* Когда мы хотим показать форму регистрации, контейнер поворачивает всю сцену */
-        .form-container.registering {
-            transform: rotateY(180deg);
-        }
-
-        /* Эффект появления текста после поворота формы */
-        .form-group.show-text {
+        /* По умолчанию показываем форму входа */
+        .login-form.show-text,
+        .register-form.registering.show-text {
+            visibility: visible; opacity: 1;
             animation-name: fadeInUp;
         }
 
@@ -94,7 +79,7 @@
 <body>
 <div class="container">
     <!-- Контейнер для двух форм -->
-    <div id="form-container" class="form-container">
+    <div id="auth-container">
         <!-- Форма ВХОДА (по умолчанию сверху) -->
         <div class="form-group login-form show-text">
             <h2 id="login-title">Вход в аккаунт</h2>
@@ -107,13 +92,13 @@
             </form>
         </div>
         
-        <!-- Форма РЕГИСТРАЦИИ (сзади) -->
+        <!-- Форма РЕГИСТРАЦИИ (скрыта по умолчанию) -->
         <div class="form-group register-form">
             <h2 id="register-title">Создать аккаунт</h2>
             <p class="subtitle" id="register-subtitle">Зарегистрируйтесь, чтобы получить доступ к редактору.</p>
             <form id="submit-form">
                 <input type="email" id="email" placeholder="Email" required autocomplete="username">
-                <input type="password" id="password" placeholder="Пароль" minlength="6" required autocomplete="new-password">
+                <input type="password" id="password" placeholder="Придумайте пароль" minlength="6" required autocomplete="new-password">
                 <span class="password-toggle" onclick="togglePasswordVisibility()">🔒 Показать</span>
                 <button type="submit" id="action-btn">Зарегистрироваться</button>
             </form>
@@ -122,7 +107,7 @@
 
     <!-- Переключатель между формами -->
     <div class="links" id="switch-link">
-        Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
+        <!-- Эти ссылки будут динамически меняться -->
     </div>
 
     <!-- Сообщения об успехе или ошибке -->
@@ -144,13 +129,12 @@ let isRegistering = false; // По умолчанию показываем фо�
 
 // === ПОДКЛЮЧЕНИЕ ЭЛЕМЕНТОВ DOM ===
 
-const formContainer = document.getElementById('form-container');
+const formContainer = document.getElementById('auth-container');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const actionBtn = document.getElementById('action-btn');
 const messageBox = document.getElementById('message-box');
-
-// === ЛОГИЧЕСКИЙ КОД ===
+const switchLinkEl = document.getElementById('switch-link'); // Новый элемент
 
 /**
  * Отображает сообщения пользователю.
@@ -164,41 +148,50 @@ function showMessage(text, type) {
 }
 
 /**
- * Переключает интерфейс на форму входа.
+ * Включает/выключает видимость пароля.
  */
-function showLogin() {
-    if (!isRegistering) return; // Избегаем повторного вызова
-    isRegistering = false;
-    formContainer.classList.remove('registering'); // Убираем поворот контейнера
-    setTimeout(() => { // Ждем окончания анимации
-        document.querySelector('.login-form').classList.add('show-text'); // Показываем текст
-    }, 500);
+function togglePasswordVisibility() {
+    const passField = document.getElementById('password');
+    if (passField.type === 'password') {
+        passField.type = 'text';
+        this.innerText = '🔐 Скрыть';
+    } else {
+        passField.type = 'password';
+        this.innerText = '🔒 Показать';
+    }
 }
 
 /**
  * Переключает интерфейс на форму регистрации.
  */
 function showRegister() {
-    if (isRegistering) return; // Избегаем повторного вызова
-    isRegistering = true;
-    formContainer.classList.add('registering'); // Поворачиваем контейнер
-    setTimeout(() => { // Ждем окончания анимации
-        document.querySelector('.register-form').classList.add('show-text'); // Показываем текст
-    }, 500);
+    if (!isRegistering) {
+        isRegistering = true;
+        // Прячем старую форму и показываем новую
+        document.querySelector('.login-form').classList.remove('show-text');
+        document.querySelector('.register-form').classList.add('show-text');
+
+        // Меняем текст ссылок внизу
+        switchLinkEl.innerHTML = `
+            Уже есть аккаунт? <a onclick="showLogin()">Войти здесь</a>
+        `;
+    }
 }
 
 /**
- * Включает/выключает видимость пароля.
+ * Переключает интерфейс на форму входа.
  */
-function togglePasswordVisibility() {
-    const passField = document.getElementById('password');
-    const icon = document.querySelector('.password-toggle');
-    if (passField.type === 'password') {
-        passField.type = 'text';
-        icon.innerText = '🔐 Скрыть';
-    } else {
-        passField.type = 'password';
-        icon.innerText = '🔒 Показать';
+function showLogin() {
+    if (isRegistering) {
+        isRegistering = false;
+        // Прячем старую форму и показываем новую
+        document.querySelector('.register-form').classList.remove('show-text');
+        document.querySelector('.login-form').classList.add('show-text');
+
+        // Меняем текст ссылок внизу
+        switchLinkEl.innerHTML = `
+            Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
+        `;
     }
 }
 
