@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация и Вход</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f9; margin: 0; }
+        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 360px; text-align: center; }
+        h2 { margin-bottom: 5px; color: #333; }
+        p.subtitle { margin-top: 0; color: #666; font-size: 14px; margin-bottom: 25px; }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid #e1e1e1; 
+            border-radius: 8px; 
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #4CAF50; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        .links { margin-top: 20px; font-size: 14px; }
+        .links a { color: #3b82f6; text-decoration: none; cursor: pointer; }
+        .status { 
+            margin-top: 15px; 
+            padding: 10px; 
+            border-radius: 5px; 
+            display: none; 
+            font-size: 14px;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="auth-section">
+    <h2 id="form-title">Создать аккаунт</h2>
+    <p class="subtitle" id="form-subtitle">Зарегистрируйтесь, чтобы получить доступ к редактору</p>
+    
+    <!-- Форма ввода -->
+    <form id="submit-form">
+        <input type="email" id="email" placeholder="Введите Email" required autocomplete="username">
+        <input type="password" id="password" placeholder="Придумайте пароль" minlength="6" required autocomplete="new-password">
+        
+        <button type="submit" id="action-btn">Зарегистрироваться</button>
+    </form>
+
+    <!-- Ссылка для перехода ко входу -->
+    <div class="links" id="switch-link">
+        Уже есть аккаунт? <a onclick="showLogin()">Войти здесь</a>
+    </div>
+
+    <!-- Сообщения об успехе или ошибке -->
+    <div id="message-box" class="status"></div>
+</div>
+
+<!-- Библиотека Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// --- НАСТРОЙКА ---
+const supabaseUrl = 'ВАШ_URL_ИЗ_SUPABASE'; 
+const supabaseKey = 'ВАШ_PUBLIC_KEY_ИЗ_SUPABASE';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// Режим отображения (true - регистрация, false - вход)
+let isRegistering = true;
+
+// Элементы DOM
+const form = document.getElementById('submit-form');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const actionBtn = document.getElementById('action-btn');
+const formTitle = document.getElementById('form-title');
+const formSubtitle = document.getElementById('form-subtitle');
+const switchLink = document.getElementById('switch-link');
+const messageBox = document.getElementById('message-box');
+
+// Функция отображения сообщений
+function showMessage(text, type) {
+    messageBox.textContent = text;
+    messageBox.className = 'status ' + type;
+    messageBox.style.display = 'block';
+}
+
+// ОСНОВНАЯ ЛОГИКА ОТПРАВКИ ФОРМЫ
+form.addEventListener('submit', async function(e) {
+    e.preventDefault(); // Отменяем перезагрузку страницы
+    
+    const email = emailInput.value;
+    const password = passwordInput.value;
+
+    actionBtn.disabled = true;
+    actionBtn.textContent = 'Подождите...';
+    messageBox.style.display = 'none';
+
+    let result;
+    if (isRegistering) {
+        // РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
+        // Метод signUp создает пользователя в таблице auth.users
+        result = await supabase.auth.signUp({
+            email: email,
+            password: password
+        });
+    } else {
+        // ВХОД ПО ПАРОЛЮ
+        // Метод signInWithPassword проверяет пару email/password
+        result = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+    }
+
+    actionBtn.disabled = false;
+    actionBtn.textContent = isRegistering ? 'Зарегистрироваться' : 'Войти';
+
+    if (result.error) {
+        // Если произошла ошибка (например, пользователь уже существует или неверный пароль)
+        showMessage(result.error.message, 'error');
+    } else {
+        if (isRegistering) {
+            // При регистрации Supabase возвращает объект user, но session может быть null до подтверждения почты
+            // Так как мы отключили Confirm email в настройках, сессия должна создаться сразу
+            showMessage('Аккаунт успешно создан! Вы вошли в систему.', 'success');
+            setTimeout(() => {
+                alert('Пользователь зарегистрирован. ID: ' + result.data.user.id);
+                window.location.reload(); // Перезагружаем страницу для обновления интерфейса
+            }, 1500);
+        } else {
+            // При успешном входе возвращается активная сессия
+            if (result.data.session) {
+                showMessage('Добро пожаловать!', 'success');
+                setTimeout(() => {
+                    alert('Вы успешно вошли. Теперь вам доступен интерфейс редактора.');
+                    window.location.href = "editor.html"; // Переход на страницу вашего сайта
+                }, 1000);
+            }
+        }
+    }
+});
+
+// Переключение текста между формами
+function showLogin() {
+    isRegistering = false;
+    formTitle.textContent = 'Вход в аккаунт';
+    formSubtitle.textContent = 'Войдите, чтобы продолжить';
+    actionBtn.textContent = 'Войти';
+    
+    // Меняем ссылку внизу обратно на регистрацию
+    switchLink.innerHTML = 'Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>';
+}
+
+function showRegister() {
+    isRegistering = true;
+    formTitle.textContent = 'Создать аккаунт';
+    formSubtitle.textContent = 'Зарегистрируйтесь, чтобы получить доступ к редактору';
+    actionBtn.textContent = 'Зарегистрироваться';
+    
+    switchLink.innerHTML = 'Уже есть аккаунт? <a onclick="showLogin()">Войти здесь</a>';
+}
+
+// Проверка при загрузке страницы: если пользователь уже залогинен, перенаправляем его
+window.addEventListener('load', () => {
+    const user = supabase.auth.user();
+    if (user) {
+        alert('Вы уже вошли в систему.');
+        // window.location.href = "index.html";
+    }
+});
+</script>
+
+</body>
+</html>
