@@ -3,63 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация и Вход</title>
+    
+    <!-- Подключаем библиотеку для анимации -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f9; margin: 0; }
-        .container { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 360px; text-align: center; }
-        h2 { margin-bottom: 5px; color: #333; }
-        p.subtitle { margin-top: 0; color: #666; font-size: 14px; margin-bottom: 25px; }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            border: 1px solid #e1e1e1; 
-            border-radius: 8px; 
-            box-sizing: border-box;
-            font-size: 16px;
+        /* === ОБЩИЕ СТИЛИ === */
+        body {
+            font-family: sans-serif;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background-color: #f4f6fa; margin: 0;
         }
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background: #4CAF50; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: bold;
-            transition: background 0.2s;
+
+        .container {
+            width: 360px; max-width: 90%; padding: 40px;
+            border-radius: 12px; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 20px;
+            text-align: center; position: relative; overflow: hidden;
+        }
+
+        h2 { color: #333; margin-bottom: 5px; }
+        p.subtitle { color: #666; font-size: 14px; margin-top: 0; margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            padding: 12px; margin-bottom: 15px;
+            border: 1px solid #e1e1e1; border-radius: 8px;
+            box-sizing: border-box; font-size: 16px;
+        }
+
+        button {
+            width: 100%; padding: 12px;
+            background: #4CAF50; color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-weight: bold; transition: opacity 0.2s;
         }
         button:hover { opacity: 0.9; }
-        .links { margin-top: 20px; font-size: 14px; }
-        .links a { color: #3b82f6; text-decoration: none; cursor: pointer; }
-        .status { 
-            margin-top: 15px; 
-            padding: 10px; 
-            border-radius: 5px; 
-            display: none; 
-            font-size: 14px;
+
+        /* === СООБЩЕНИЯ О СТАТУСЕ === */
+        .status {
+            margin-top: 15px; padding: 10px; border-radius: 5px;
+            font-size: 14px; display: none;
         }
         .success { background: #d1fae5; color: #065f46; }
         .error { background: #fee2e2; color: #991b1b; }
+
+        /* === ПЕРЕКЛЮЧАТЕЛЬ ФОРМ === */
+        .links {
+            margin-top: 20px; font-size: 14px;
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 0 20px; line-height: 1.7;
+        }
+        .links a { color: #3b82f6; text-decoration: none; cursor: pointer; }
+
+        /* === АНИМАЦИЯ ПЕРЕКЛЮЧЕНИЯ === */
+        .form-container {
+            position: relative; z-index: 1;
+            transform-style: preserve-3d; perspective: 1000px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .form-group {
+            position: absolute; top: 0; left: 0; right: 0;
+            backface-visibility: hidden;
+            animation-duration: 0.5s; animation-fill-mode: forwards;
+        }
+
+        /* Форма Регистрации — это "задняя сторона". Она повернута на 180 градусов вокруг оси Y */
+        .register-form {
+            transform: rotateY(-180deg);
+        }
+
+        /* Когда мы хотим показать форму регистрации, контейнер поворачивает всю сцену */
+        .form-container.registering {
+            transform: rotateY(180deg);
+        }
+
+        /* Эффект появления текста после поворота формы */
+        .form-group.show-text {
+            animation-name: fadeInUp;
+        }
+
+        /* Кнопка показа пароля */
+        .password-toggle {
+            position: absolute; top: calc(50% + 10px); right: 10px;
+            font-size: 18px; cursor: pointer; user-select: none;
+            color: #aaa; transition: color 0.2s;
+        }
+        .password-toggle:hover { color: #666; }
     </style>
 </head>
 <body>
-
-<div class="container" id="auth-section">
-    <h2 id="form-title">Создать аккаунт</h2>
-    <p class="subtitle" id="form-subtitle">Зарегистрируйтесь, чтобы получить доступ к редактору</p>
-    
-    <!-- Форма ввода -->
-    <form id="submit-form">
-        <input type="email" id="email" placeholder="Введите Email" required autocomplete="username">
-        <input type="password" id="password" placeholder="Придумайте пароль" minlength="6" required autocomplete="new-password">
+<div class="container">
+    <!-- Контейнер для двух форм -->
+    <div id="form-container" class="form-container">
+        <!-- Форма ВХОДА (по умолчанию сверху) -->
+        <div class="form-group login-form show-text">
+            <h2 id="login-title">Вход в аккаунт</h2>
+            <p class="subtitle" id="login-subtitle">Войдите, чтобы продолжить.</p>
+            <form id="submit-form">
+                <input type="email" id="email" placeholder="Email" required autocomplete="username">
+                <input type="password" id="password" placeholder="Пароль" minlength="6" required autocomplete="current-password">
+                <span class="password-toggle" onclick="togglePasswordVisibility()">🔒 Показать</span>
+                <button type="submit" id="action-btn">Войти</button>
+            </form>
+        </div>
         
-        <button type="submit" id="action-btn">Зарегистрироваться</button>
-    </form>
+        <!-- Форма РЕГИСТРАЦИИ (сзади) -->
+        <div class="form-group register-form">
+            <h2 id="register-title">Создать аккаунт</h2>
+            <p class="subtitle" id="register-subtitle">Зарегистрируйтесь, чтобы получить доступ к редактору.</p>
+            <form id="submit-form">
+                <input type="email" id="email" placeholder="Email" required autocomplete="username">
+                <input type="password" id="password" placeholder="Пароль" minlength="6" required autocomplete="new-password">
+                <span class="password-toggle" onclick="togglePasswordVisibility()">🔒 Показать</span>
+                <button type="submit" id="action-btn">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
 
-    <!-- Ссылка для перехода ко входу -->
+    <!-- Переключатель между формами -->
     <div class="links" id="switch-link">
-        Уже есть аккаунт? <a onclick="showLogin()">Войти здесь</a>
+        Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
     </div>
 
     <!-- Сообщения об успехе или ошибке -->
@@ -70,113 +133,168 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// --- НАСТРОЙКА ---
-const supabaseUrl = 'https://crirmkysumirbdsjdwdz.supabase.co'; 
-const supabaseKey = 'sb_publishable_s0iVxglyGlPFd-4Ni2mpjw_n6iD3OZb';
+// === НАСТРОЙКА SUPABASE ===
+
+// ВАЖНО! ЗАМЕНИТЕ ЭТИ МЕСТОЗАХВАТЫ НА ДАННЫЕ ИЗ ВАШЕЙ ПАНЕЛИ УПРАВЛЕНИЯ!
+const supabaseUrl = 'ВАШ_URL_ИЗ_SUPABASE'; // Пример: https://myproject.supabase.co
+const supabaseKey = 'ВАШ_PUBLIC_ANON_KEY_ИЗ_SUPABASE'; // Очень длинная строка, начинается с eyJ...
+
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+let isRegistering = false; // По умолчанию показываем форму входа
 
-// Режим отображения (true - регистрация, false - вход)
-let isRegistering = true;
+// === ПОДКЛЮЧЕНИЕ ЭЛЕМЕНТОВ DOM ===
 
-// Элементы DOM
-const form = document.getElementById('submit-form');
+const formContainer = document.getElementById('form-container');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const actionBtn = document.getElementById('action-btn');
-const formTitle = document.getElementById('form-title');
-const formSubtitle = document.getElementById('form-subtitle');
-const switchLink = document.getElementById('switch-link');
 const messageBox = document.getElementById('message-box');
 
-// Функция отображения сообщений
+// === ЛОГИЧЕСКИЙ КОД ===
+
+/**
+ * Отображает сообщения пользователю.
+ * @param {string} text Текст сообщения.
+ * @param {'success' | 'error'} type Тип сообщения.
+ */
 function showMessage(text, type) {
     messageBox.textContent = text;
-    messageBox.className = 'status ' + type;
+    messageBox.className = `status ${type}`;
     messageBox.style.display = 'block';
 }
 
-// ОСНОВНАЯ ЛОГИКА ОТПРАВКИ ФОРМЫ
-form.addEventListener('submit', async function(e) {
-    e.preventDefault(); // Отменяем перезагрузку страницы
-    
-    const email = emailInput.value;
+/**
+ * Переключает интерфейс на форму входа.
+ */
+function showLogin() {
+    if (!isRegistering) return; // Избегаем повторного вызова
+    isRegistering = false;
+    formContainer.classList.remove('registering'); // Убираем поворот контейнера
+    setTimeout(() => { // Ждем окончания анимации
+        document.querySelector('.login-form').classList.add('show-text'); // Показываем текст
+    }, 500);
+}
+
+/**
+ * Переключает интерфейс на форму регистрации.
+ */
+function showRegister() {
+    if (isRegistering) return; // Избегаем повторного вызова
+    isRegistering = true;
+    formContainer.classList.add('registering'); // Поворачиваем контейнер
+    setTimeout(() => { // Ждем окончания анимации
+        document.querySelector('.register-form').classList.add('show-text'); // Показываем текст
+    }, 500);
+}
+
+/**
+ * Включает/выключает видимость пароля.
+ */
+function togglePasswordVisibility() {
+    const passField = document.getElementById('password');
+    const icon = document.querySelector('.password-toggle');
+    if (passField.type === 'password') {
+        passField.type = 'text';
+        icon.innerText = '🔐 Скрыть';
+    } else {
+        passField.type = 'password';
+        icon.innerText = '🔒 Показать';
+    }
+}
+
+// === ОСНОВА: РАЗРЕШЕНИЕ ФОРМЫ ===
+
+formContainer.addEventListener('submit', async function(e) {
+    e.preventDefault(); // Блокируем стандартную отправку
+
+    const email = emailInput.value.trim();
     const password = passwordInput.value;
+
+    // Проверяем валидность данных перед запросом
+    if (!email || !password) {
+        showMessage('Заполните все поля.', 'error');
+        return;
+    }
 
     actionBtn.disabled = true;
     actionBtn.textContent = 'Подождите...';
     messageBox.style.display = 'none';
 
     let result;
-    if (isRegistering) {
-        // РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ
-        // Метод signUp создает пользователя в таблице auth.users
-        result = await supabase.auth.signUp({
-            email: email,
-            password: password
-        });
-    } else {
-        // ВХОД ПО ПАРОЛЮ
-        // Метод signInWithPassword проверяет пару email/password
-        result = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+    try {
+        if (isRegistering) {
+            // 📩 РЕГИСТРАЦИЯ: Создаем пользователя
+            result = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: window.location.origin // Куда вернуть после подтверждения почты (если включено)
+                }
+            });
+        } else {
+            // 🚪 АВТОРИЗАЦИЯ: Проверяем почту и пароль
+            result = await supabase.auth.signInWithPassword({ email, password });
+        }
+    } catch (err) {
+        console.error(err);
+        showMessage('Ошибка сервера. Попробуйте позже.', 'error');
+        return;
     }
 
     actionBtn.disabled = false;
     actionBtn.textContent = isRegistering ? 'Зарегистрироваться' : 'Войти';
 
     if (result.error) {
-        // Если произошла ошибка (например, пользователь уже существует или неверный пароль)
-        showMessage(result.error.message, 'error');
+        // Обрабатываем ошибки от Supabase
+        switch(result.error.message) {
+            case 'Email already signed up':
+                showMessage('Пользователь с таким Email уже существует.', 'error');
+                break;
+            default:
+                showMessage(result.error.message, 'error');
+        }
     } else {
-        if (isRegistering) {
-            // При регистрации Supabase возвращает объект user, но session может быть null до подтверждения почты
-            // Так как мы отключили Confirm email в настройках, сессия должна создаться сразу
-            showMessage('Аккаунт успешно создан! Вы вошли в систему.', 'success');
+        // При успешной регистрации сессия создается мгновенно (Confirm email отключено)
+        const session = result.data.session;
+        const user = result.data.user;
+
+        if (session && user) {
+            // ✅ Авторизация прошла успешно
+            showMessage(isRegistering 
+                ? 'Аккаунт создан! Вы вошли.'
+                : 'Добро пожаловать!', 'success'
+            );
+            
+            // Демо-код: выводим ID пользователя через 1 секунду
+            setTimeout(() => alert(`ID пользователя: ${user.id}`), 1000);
+
+            // Через 2 секунды переходим на другую страницу
             setTimeout(() => {
-                alert('Пользователь зарегистрирован. ID: ' + result.data.user.id);
-                window.location.reload(); // Перезагружаем страницу для обновления интерфейса
-            }, 1500);
+                window.location.href = "editor.html"; // Ваш сайт
+            }, 2000);
         } else {
-            // При успешном входе возвращается активная сессия
-            if (result.data.session) {
-                showMessage('Добро пожаловать!', 'success');
-                setTimeout(() => {
-                    alert('Вы успешно вошли. Теперь вам доступен интерфейс редактора.');
-                    window.location.href = "editor.html"; // Переход на страницу вашего сайта
-                }, 1000);
-            }
+            // ❌ Ошибка: нет сессии (это должно быть невозможно при Confirm email off)
+            showMessage('Не удалось войти. Проверьте настройки Supabase.', 'error');
         }
     }
 });
 
-// Переключение текста между формами
-function showLogin() {
-    isRegistering = false;
-    formTitle.textContent = 'Вход в аккаунт';
-    formSubtitle.textContent = 'Войдите, чтобы продолжить';
-    actionBtn.textContent = 'Войти';
-    
-    // Меняем ссылку внизу обратно на регистрацию
-    switchLink.innerHTML = 'Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>';
-}
+// === ПРОСЛУШИВАНИЕ СОБЫТИЯ ЗАГРУЗКИ ===
 
-function showRegister() {
-    isRegistering = true;
-    formTitle.textContent = 'Создать аккаунт';
-    formSubtitle.textContent = 'Зарегистрируйтесь, чтобы получить доступ к редактору';
-    actionBtn.textContent = 'Зарегистрироваться';
-    
-    switchLink.innerHTML = 'Уже есть аккаунт? <a onclick="showLogin()">Войти здесь</a>';
-}
-
-// Проверка при загрузке страницы: если пользователь уже залогинен, перенаправляем его
 window.addEventListener('load', () => {
-    const user = supabase.auth.user();
-    if (user) {
-        alert('Вы уже вошли в систему.');
-        // window.location.href = "index.html";
+    // Проверяем, есть ли у нас активная сессия
+    const currentUser = supabase.auth.user();
+    const currentSession = supabase.auth.session();
+
+    if (currentUser && currentSession) {
+        // Пользователь уже авторизован
+        showMessage('Вы уже вошли в систему.', 'success');
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1500);
+    } else {
+        // Это первая загрузка страницы, инициализируем форму входа
+        showLogin();
     }
 });
 </script>
